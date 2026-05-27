@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gebäudebrüter Stadt Zürich</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -11,24 +14,30 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #f5f7fa;
-      color: #1a1a2e;
-      line-height: 1.6;
+      font-family: 'Inter', Helvetica, Arial, sans-serif;
+      background: #f4f4f4;
+      color: #000;
+      line-height: 1.5;
     }
 
     header {
       background: #0F05A0;
       color: white;
       padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .header-text {
       text-align: center;
-      position: relative;
-      overflow: hidden;
     }
 
     header h1 {
-      font-size: 2rem;
-      font-weight: 700;
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.3;
       margin-bottom: 0.5rem;
     }
 
@@ -37,44 +46,47 @@
       opacity: 0.85;
     }
 
-    .header-logo {
-      position: absolute;
-      right: 1.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 70px;
-      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+    .header-logo a {
+      display: block;
+    }
+
+    .header-logo img {
+      height: 100px;
+      width: auto;
       filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
       cursor: pointer;
     }
 
-    .header-logo:hover {
-      transform: translateY(-50%) rotateY(360deg) scale(1.08);
+    .header-logo img:hover {
+      transform: rotateY(360deg) scale(1.08);
       filter: drop-shadow(0 4px 16px rgba(255,215,54,0.5));
     }
 
     main {
-      max-width: 960px;
+      max-width: 888px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
 
     .chart-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       padding: 2rem;
       margin-bottom: 2rem;
     }
 
     .chart-card h2 {
       font-size: 1.25rem;
+      font-weight: 900;
+      color: #0F05A0;
       margin-bottom: 0.25rem;
     }
 
     .chart-card .subtitle {
       font-size: 0.9rem;
-      color: #666;
+      color: #646464;
       margin-bottom: 1.5rem;
     }
 
@@ -93,21 +105,27 @@
 
     .kpi {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       padding: 1.25rem 1.5rem;
       text-align: center;
     }
 
     .kpi .value {
       font-size: 2rem;
-      font-weight: 700;
-      color: #0d47a1;
+      font-weight: 900;
+      color: #0F05A0;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .kpi .value.text-value {
+      font-size: 1.35rem;
     }
 
     .kpi .label {
       font-size: 0.85rem;
-      color: #666;
+      color: #646464;
       margin-top: 0.25rem;
     }
 
@@ -115,21 +133,22 @@
       text-align: center;
       padding: 2rem 1rem;
       font-size: 0.8rem;
-      color: #999;
+      color: #646464;
+      border-top: 1px solid #dedede;
     }
 
-    footer a { color: #1565c0; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    footer a { color: #0F05A0; text-decoration: underline; }
+    footer a:hover { color: #0353DC; }
 
     .chart-source {
       font-size: 0.78rem;
-      color: #999;
+      color: #646464;
       margin-top: 1rem;
       line-height: 1.5;
     }
 
-    .chart-source a { color: #1565c0; text-decoration: none; }
-    .chart-source a:hover { text-decoration: underline; }
+    .chart-source a { color: #0F05A0; text-decoration: underline; }
+    .chart-source a:hover { color: #0353DC; }
 
     .filter-row {
       display: flex;
@@ -143,15 +162,15 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       background: white;
-      color: #444;
+      color: #545454;
       font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, color 0.15s;
     }
 
-    .filter-btn:hover { border-color: #0d47a1; color: #0d47a1; }
-    .filter-btn.active { background: #0d47a1; color: white; border-color: #0d47a1; }
+    .filter-btn:hover { border-color: #0F05A0; color: #0F05A0; }
+    .filter-btn.active { background: #0F05A0; color: white; border-color: #0F05A0; }
 
     nav {
       background: white;
@@ -166,7 +185,7 @@
       justify-content: center;
       gap: 0.25rem;
       list-style: none;
-      max-width: 960px;
+      max-width: 888px;
       margin: 0 auto;
       padding: 0.6rem 1.5rem;
     }
@@ -175,33 +194,33 @@
       display: block;
       padding: 0.4rem 1rem;
       border-radius: 8px;
-      color: #444;
+      color: #545454;
       text-decoration: none;
       font-size: 0.9rem;
       font-weight: 500;
       transition: background 0.15s, color 0.15s;
     }
 
-    nav a:hover { background: #e8eaf6; color: #0d47a1; }
+    nav a:hover { background: #eff5ff; color: #0F05A0; }
 
     .section-title {
       font-size: 1.5rem;
-      font-weight: 700;
-      color: #0d47a1;
+      font-weight: 900;
+      color: #0F05A0;
       margin-bottom: 1.25rem;
       padding-top: 1rem;
     }
 
     #map {
       height: 500px;
-      border-radius: 8px;
+      border-radius: 4px;
       z-index: 1;
     }
 
     .map-legend {
       background: white;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
+      border-radius: 4px;
       box-shadow: 0 1px 5px rgba(0,0,0,0.2);
       font-size: 0.8rem;
       line-height: 1.8;
@@ -229,23 +248,23 @@
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      color: #444;
+      color: #545454;
       font-weight: 600;
     }
 
-    .table-card th:hover { color: #0d47a1; }
+    .table-card th:hover { color: #0F05A0; }
     .table-card th .sort-arrow { font-size: 0.7rem; margin-left: 0.3rem; opacity: 0.4; }
-    .table-card th.sorted .sort-arrow { opacity: 1; color: #0d47a1; }
+    .table-card th.sorted .sort-arrow { opacity: 1; color: #0F05A0; }
 
     .table-card td {
       padding: 0.5rem 0.75rem;
       border-bottom: 1px solid #f0f0f0;
     }
 
-    .table-card tr:hover td { background: #f5f7fa; }
+    .table-card tr:hover td { background: #f4f4f4; }
 
-    .strasse-link { color: #1565c0; text-decoration: none; cursor: pointer; }
-    .strasse-link:hover { text-decoration: underline; }
+    .strasse-link { color: #0F05A0; text-decoration: underline; cursor: pointer; }
+    .strasse-link:hover { color: #0353DC; }
 
     .table-card td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
@@ -262,13 +281,13 @@
 
     .intro-text {
       font-size: 0.95rem;
-      color: #444;
+      color: #545454;
       line-height: 1.7;
       margin-bottom: 1.5rem;
     }
 
-    .intro-text a { color: #1565c0; text-decoration: none; }
-    .intro-text a:hover { text-decoration: underline; }
+    .intro-text a { color: #0F05A0; text-decoration: underline; }
+    .intro-text a:hover { color: #0353DC; }
 
     .tables-grid {
       display: grid;
@@ -288,11 +307,15 @@
 <body>
 
 <header>
-<a href="https://www.stadt-zuerich.ch/de/politik-und-verwaltung/statistik-und-daten/open-government-data/anwendungen/anwendungen-2026/ckan-mcp-server.html" target="_blank" rel="noopener">
-    <img src="2026_logo_mcp_server_alex.png" alt="MCP-Server Logo" class="header-logo">
-  </a>
-  <h1>Gebäudebrüter der Stadt Zürich</h1>
-  <p>Interaktive Auswertung der Nistplatzstandorte auf Basis der Open-Data-Geodaten von Grün Stadt Zürich</p>
+  <div class="header-text">
+    <h1>Gebäudebrüter der Stadt Zürich</h1>
+    <p>Interaktive Auswertung der Nistplatzstandorte auf Basis der Open-Data-Geodaten von Grün Stadt Zürich</p>
+  </div>
+  <div class="header-logo">
+    <a href="https://www.stadt-zuerich.ch/de/politik-und-verwaltung/statistik-und-daten/open-government-data/anwendungen/anwendungen-2026/ckan-mcp-server.html" target="_blank" rel="noopener">
+      <img src="2026_logo_mcp_server_alex.png" alt="MCP-Server Logo">
+    </a>
+  </div>
 </header>
 
 <nav>
@@ -389,7 +412,7 @@
 
 <script>
 // zuericolors qual6
-const qual6 = ['#3431DE','#DB247D','#1D942E','#FBB900','#23C3F1','#FF720C'];
+const qual6 = ['#3431DE','#DB247D','#1F9E31','#FBB900','#23C3F1','#FF720C'];
 
 // Hauptarten für Charts (>9 Standorte), alle anderen → Übrige
 const HAUPTARTEN = ['Mauersegler','Alpensegler','Segler sp.','Mehlschwalbe','Rauchschwalbe'];
@@ -422,18 +445,15 @@ const KREISE_WFS = 'https://www.ogd.stadt-zuerich.ch/wfs/geoportal/Stadtkreise';
 // --- Daten laden und Visualisierungen aufbauen ---
 async function loadData() {
   try {
-    const gebResp = await fetch(`${WFS_URL}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&outputFormat=GeoJSON&typeName=gebaeudebrueter_inventar&maxFeatures=10000`);
-    const geojson = await gebResp.json();
+    const [geojson, kreise] = await Promise.all([
+      fetch(`${WFS_URL}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&outputFormat=GeoJSON&typeName=gebaeudebrueter_inventar&maxFeatures=10000`)
+        .then(r => r.json()),
+      fetch(`${KREISE_WFS}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&outputFormat=GeoJSON&typeName=adm_stadtkreise_a&maxFeatures=100`)
+        .then(r => r.json())
+        .then(j => j.features || [])
+        .catch(e => { console.warn('Stadtkreise konnten nicht geladen werden:', e); return []; }),
+    ]);
     const features = geojson.features;
-
-    let kreise = [];
-    try {
-      const kreiseResp = await fetch(`${KREISE_WFS}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&outputFormat=GeoJSON&typeName=adm_stadtkreise_a&maxFeatures=100`);
-      const kreiseGeojson = await kreiseResp.json();
-      kreise = kreiseGeojson.features || [];
-    } catch (e) {
-      console.warn('Stadtkreise konnten nicht geladen werden:', e);
-    }
 
     computeCentroids(features);
     if (kreise.length > 0) assignKreise(features, kreise);
@@ -490,16 +510,33 @@ function computeCentroids(features) {
   });
 }
 
+function polygonBBox(rings) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const ring of rings) {
+    for (const [x, y] of ring) {
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  return [minX, minY, maxX, maxY];
+}
+
 function assignKreise(features, kreise) {
+  const prepared = kreise.map(k => {
+    const geom = k.geometry;
+    const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
+    return { name: getKreisName(k), polys: polys.map(p => ({ rings: p, bbox: polygonBBox(p) })) };
+  });
+
   features.forEach(f => {
     const [lat, lng] = f.properties._centroid;
-
-    for (const k of kreise) {
-      const geom = k.geometry;
-      const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
-      for (const poly of polys) {
-        if (pointInPolygon([lng, lat], poly)) {
-          f.properties._kreisName = getKreisName(k);
+    for (const k of prepared) {
+      for (const { rings, bbox } of k.polys) {
+        if (lng < bbox[0] || lng > bbox[2] || lat < bbox[1] || lat > bbox[3]) continue;
+        if (pointInPolygon([lng, lat], rings)) {
+          f.properties._kreisName = k.name;
           return;
         }
       }
@@ -524,9 +561,10 @@ function buildKPIs(features) {
   ];
 
   const row = document.getElementById('kpiRow');
-  row.innerHTML = kpis.map(k =>
-    `<div class="kpi"><div class="value">${k.value}</div><div class="label">${k.label}</div></div>`
-  ).join('');
+  row.innerHTML = kpis.map(k => {
+    const cls = typeof k.value === 'string' && isNaN(k.value.replace(/['\s]/g, '')) ? ' text-value' : '';
+    return `<div class="kpi"><div class="value${cls}">${k.value}</div><div class="label">${k.label}</div></div>`;
+  }).join('');
 }
 
 // --- Karte ---
@@ -554,7 +592,7 @@ function buildMap(features, kreise) {
 
   kreise.forEach(k => {
     L.geoJSON(k.geometry, {
-      style: { color: '#0d47a1', weight: 1.5, fillOpacity: 0.03, dashArray: '4 4' },
+      style: { color: '#0F05A0', weight: 1.5, fillOpacity: 0.03, dashArray: '4 4' },
     }).addTo(map);
     const geom = k.geometry;
     const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
@@ -567,7 +605,7 @@ function buildMap(features, kreise) {
     L.marker([cy, cx], {
       icon: L.divIcon({
         className: '',
-        html: `<div style="font-size:13px;font-weight:700;color:#0d47a1;opacity:0.55;text-align:center;line-height:1.1;white-space:nowrap">Kreis ${nr}</div>`,
+        html: `<div style="font-size:13px;font-weight:700;color:#0F05A0;opacity:0.55;text-align:center;line-height:1.1;white-space:nowrap">Kreis ${nr}</div>`,
         iconSize: [50, 30],
         iconAnchor: [25, 15],
       }),
@@ -663,7 +701,7 @@ function buildArtenChart(features) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: '#333',
           titleFont: { size: 14 },
           bodyFont: { size: 13 },
           padding: 12,
@@ -722,7 +760,7 @@ function buildKreisChart(features) {
           labels: { usePointStyle: true, padding: 14, font: { size: 11 } },
         },
         tooltip: {
-          backgroundColor: '#1a1a2e',
+          backgroundColor: '#333',
           titleFont: { size: 14 },
           bodyFont: { size: 13 },
           padding: 12,
@@ -826,34 +864,6 @@ function sortTable(tableId, col) {
 
 loadData();
 
-// --- Logo: grauen Hintergrund transparent machen ---
-(function() {
-  const img = document.querySelector('.header-logo');
-  const process = () => {
-    try {
-      const c = document.createElement('canvas');
-      c.width = img.naturalWidth;
-      c.height = img.naturalHeight;
-      const ctx = c.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      const d = ctx.getImageData(0, 0, c.width, c.height);
-      const px = d.data;
-      for (let i = 0; i < px.length; i += 4) {
-        const r = px[i], g = px[i+1], b = px[i+2];
-        const brightness = (r + g + b) / 3;
-        if (brightness > 180 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25) {
-          px[i+3] = 0;
-        }
-      }
-      ctx.putImageData(d, 0, 0);
-      img.src = c.toDataURL();
-    } catch(e) {
-      img.style.borderRadius = '50%';
-      img.style.objectFit = 'cover';
-    }
-  };
-  if (img.complete && img.naturalWidth > 0) process(); else img.onload = process;
-})();
 </script>
 </body>
 </html>
